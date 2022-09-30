@@ -11,6 +11,7 @@ import person.AbstractPerson;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class AccountFactoryImpl
+        implements AccountFactory
 {
     static
     AtomicLong accountNumber = new AtomicLong(1);

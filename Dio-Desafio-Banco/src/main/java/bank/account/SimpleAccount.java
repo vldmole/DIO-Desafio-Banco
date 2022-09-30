@@ -7,3 +7,4 @@ public class SimpleAccount extends AbstractAccount
         super(id, ownerId);
     }
 }
+

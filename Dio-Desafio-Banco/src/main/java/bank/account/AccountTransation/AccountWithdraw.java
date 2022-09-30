@@ -1,9 +1,9 @@
 package bank.account.AccountTransation;
 
-public class AccountWithdraw extends AbstractSingleAccountTransaction
+public class AccountWithdraw extends AbstractAccountTransaction
 {
-    public AccountWithdraw(String accountIdentity, float value)
+    public AccountWithdraw(Long transactionId, String accountId, float value)
     {
-        super(accountIdentity, value);
+        super(transactionId, accountId, OperationType.D, value);
     }
 }

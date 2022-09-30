@@ -1,7 +1,8 @@
 package bank.account.AccountTransation;
 
-public interface DoubleAccountTransaction
+public interface AccountTransferenceTransaction
 {
+    Long getId();
     String getOriginAccount();
     String getDestinationAccount();
 }

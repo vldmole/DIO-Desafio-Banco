@@ -1,6 +1,7 @@
 package bank.account;
 
 import bank.account.exception.AccountAlreadyClosedException;
+import bank.account.exception.InsufficientAccountBalanceException;
 import util.database.Entity;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public abstract class AbstractAccount
     @Override
     public String getId()
     {
-        return this.getId();
+        return id;
     }
 
     //------------------------------------------------------
@@ -75,8 +76,11 @@ public abstract class AbstractAccount
 
     //------------------------------------------------------
     @Override
-    public void withdraw(float value)
+    public void withdraw(float value) throws InsufficientAccountBalanceException
     {
+        if(this.balance < value)
+            throw new InsufficientAccountBalanceException(this.getId(), this.getBalance(), value);
+
         this.balance -= value;
     }
 }

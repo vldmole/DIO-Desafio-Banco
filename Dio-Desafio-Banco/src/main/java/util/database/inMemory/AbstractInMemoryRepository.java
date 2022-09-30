@@ -38,7 +38,8 @@ public abstract class AbstractInMemoryRepository<TId extends Comparable<TId>, TD
 	//----------------------------------------------------------------------------------------------------------
 	static ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(3);	
 	protected List<TData> listData = new ArrayList<>();
-	
+	private final float ERROR_RATE=0.01F;
+	private final long DELAY_TIME = 1000;
 	
 	//----------------------------------------------------------------------------------------------------------
 	protected void load(TData[] arrayData)
@@ -55,12 +56,12 @@ public abstract class AbstractInMemoryRepository<TId extends Comparable<TId>, TD
 		
 		executor.schedule(()->
 		{
-			if (Math.random() > 0.1f)
+			if (Math.random() > ERROR_RATE)
 				observable.fireNext(this.listData);
 			else
 				observable.fireError(new RuntimeException("An unexpected error ocurred while reading all!"));
 		
-		}, 1000, TimeUnit.MILLISECONDS);
+		}, DELAY_TIME, TimeUnit.MILLISECONDS);
 		
 		return observable;
 	}
@@ -73,12 +74,12 @@ public abstract class AbstractInMemoryRepository<TId extends Comparable<TId>, TD
 		
 		executor.schedule(()->
 		{
-			if (Math.random() > 0.1f)
+			if (Math.random() > ERROR_RATE)
 				observable.fireNext(listData.stream().filter(predicate).collect(Collectors.toList()));
 			else
 				observable.fireError(new RuntimeException("An unexpected error ocurred while filtering!"));
 			
-		}, 1000, TimeUnit.MILLISECONDS);
+		}, DELAY_TIME, TimeUnit.MILLISECONDS);
 		
 		return observable;
 	}
@@ -92,7 +93,7 @@ public abstract class AbstractInMemoryRepository<TId extends Comparable<TId>, TD
 
 		executor.schedule(()->
 		{
-			if (Math.random() > 0.1f)
+			if (Math.random() > ERROR_RATE)
 			{
 				List<TData> lst = listData.stream().filter(predicate).toList();
 				if( lst.size() > 0 )
@@ -103,7 +104,7 @@ public abstract class AbstractInMemoryRepository<TId extends Comparable<TId>, TD
 			else
 				observable.fireError(new RuntimeException("An unexpected error occurred while filtering!"));
 
-		}, 1000, TimeUnit.MILLISECONDS);
+		}, DELAY_TIME, TimeUnit.MILLISECONDS);
 
 		return observable;
 	}
@@ -116,15 +117,15 @@ public abstract class AbstractInMemoryRepository<TId extends Comparable<TId>, TD
 		
 		executor.schedule(()->
 		{
-			if (Math.random() > 0.1f)
+			if (Math.random() > ERROR_RATE)
 			{
 				this.listData.add(data);
 				observable.fireNext(data);
 			}
 			else
-				observable.fireError(new RuntimeException("An unexpected error ocurred while adding!"));
+				observable.fireError(new RuntimeException("An unexpected error occurred while adding!"));
 			
-		}, 1000, TimeUnit.MILLISECONDS);
+		}, DELAY_TIME, TimeUnit.MILLISECONDS);
 		
 		return observable;
 	}
@@ -137,7 +138,7 @@ public abstract class AbstractInMemoryRepository<TId extends Comparable<TId>, TD
 		
 		executor.schedule(()->
 		{
-			if (Math.random() > 0.1f)
+			if (Math.random() > ERROR_RATE)
 			{
 				TData data = null;
 				for(TData element: this.listData)
@@ -158,7 +159,7 @@ public abstract class AbstractInMemoryRepository<TId extends Comparable<TId>, TD
 			else
 				observable.fireError(new RuntimeException("An unexpected error ocurred while deleting!"));
 			
-		}, 1000, TimeUnit.MILLISECONDS);
+		}, DELAY_TIME, TimeUnit.MILLISECONDS);
 		
 		return observable;
 	}

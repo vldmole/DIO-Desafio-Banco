@@ -2,9 +2,9 @@ package bank.account.AccountTransation.repository;
 
 
 import bank.account.AccountTransation.AbstractAccountTransaction;
-import bank.account.AccountTransation.AbstractDoubleAccountTransaction;
-import bank.account.AccountTransation.AbstractSingleAccountTransaction;
 
+import bank.account.AccountTransation.AccountTransference;
+import bank.account.AccountTransation.AccountTransferenceTransaction;
 import util.observable.Observable;
 
 import java.util.ArrayList;
@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class TransactionRepository
 {
@@ -35,24 +34,24 @@ public class TransactionRepository
     }
     //----------------------------------------------------------------------------------------------------------
     protected final
-    SingleAccountTransactionRepository singleAccountTransactionRepository =
-            new SingleAccountTransactionRepository();
+    AccountTransactionRepository accountTransactionRepository =
+            new AccountTransactionRepository();
     protected final
-    DoubleAccountTransactionRepository doubleAccountTransactionRepository =
-            new DoubleAccountTransactionRepository();
+    AccountTransferenceRepository accountTransferenceRepository =
+            new AccountTransferenceRepository();
 
     //----------------------------------------------------------------------------------------------------------
     public
-    Observable<Collection<AbstractSingleAccountTransaction>> readAllSingleAccountTransactions()
+    Observable<Collection<AbstractAccountTransaction>> readAllAccountTransactions()
     {
-        return singleAccountTransactionRepository.readAll();
+        return accountTransactionRepository.readAll();
     }
 
     //----------------------------------------------------------------------------------------------------------
     public
-    Observable<Collection<AbstractDoubleAccountTransaction>> readAllDoubleAccountTransactions()
+    Observable<Collection<AccountTransference>> readAllDoubleAccountTransactions()
     {
-        return doubleAccountTransactionRepository.readAll();
+        return accountTransferenceRepository.readAll();
     }
 
     //----------------------------------------------------------------------------------------------------------
@@ -63,7 +62,7 @@ public class TransactionRepository
         final ObservableResult<Collection<AbstractAccountTransaction>> observable = new ObservableResult<>();
         final AtomicBoolean loaded = new AtomicBoolean(false);
 
-        this.readAllSingleAccountTransactions().subscribe(
+        this.readAllAccountTransactions().subscribe(
             list -> {
                 accountList.addAll(list);
                 if (loaded.get())
@@ -91,18 +90,18 @@ public class TransactionRepository
 
     //--------------------------------------------------------------------------------------------------------
     public
-    Observable<Collection<AbstractSingleAccountTransaction>>
-    filterSingleAccountTransactions(Predicate<AbstractSingleAccountTransaction> predicate)
+    Observable<Collection<AbstractAccountTransaction>>
+    filterSingleAccountTransactions(Predicate<AbstractAccountTransaction> predicate)
     {
-        return this.singleAccountTransactionRepository.filter(predicate);
+        return this.accountTransactionRepository.filter(predicate);
     }
 
     //--------------------------------------------------------------------------------------------------------
     public
-    Observable<Collection<AbstractDoubleAccountTransaction>>
-    filterDoubleAccountTransactions(Predicate<AbstractDoubleAccountTransaction> predicate)
+    Observable<Collection<AccountTransference>>
+    filterAccountTransferences(Predicate<AccountTransference> predicate)
     {
-        return this.doubleAccountTransactionRepository.filter(predicate);
+        return this.accountTransferenceRepository.filter(predicate);
     }
 
     //--------------------------------------------------------------------------------------------------------
@@ -124,29 +123,33 @@ public class TransactionRepository
 
     //--------------------------------------------------------------------------------------------------------
     public
-    Observable<AbstractSingleAccountTransaction> addSimpleAccount(AbstractSingleAccountTransaction account)
+    Observable<AbstractAccountTransaction>
+    add(AbstractAccountTransaction account)
     {
-        return singleAccountTransactionRepository.add(account);
+        return accountTransactionRepository.add(account);
     }
 
     //--------------------------------------------------------------------------------------------------------
     public
-    Observable<AbstractDoubleAccountTransaction> addSavingAccount(AbstractDoubleAccountTransaction account)
+    Observable<AccountTransference>
+    add(AccountTransference account)
     {
-        return doubleAccountTransactionRepository.add(account);
+        return accountTransferenceRepository.add(account);
     }
 
     //--------------------------------------------------------------------------------------------------------
     public
-    Observable<AbstractSingleAccountTransaction> deleteSimpleAccount(AbstractSingleAccountTransaction account)
+    Observable<AbstractAccountTransaction>
+    deleteSimpleAccountTransaction(AbstractAccountTransaction account)
     {
-        return singleAccountTransactionRepository.deleteById(account.getId());
+        return accountTransactionRepository.deleteById(account.getId());
     }
 
     //--------------------------------------------------------------------------------------------------------
     public
-    Observable<AbstractDoubleAccountTransaction> deleteSavingAccount(AbstractDoubleAccountTransaction account)
+    Observable<AbstractAccountTransaction>
+    deleteSavingAccountTransaction(AbstractAccountTransaction account)
     {
-        return doubleAccountTransactionRepository.deleteById(account.getId());
+        return accountTransactionRepository.deleteById(account.getId());
     }
 }

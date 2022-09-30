@@ -2,9 +2,12 @@ package util.observable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Observable<TData>
 {
+	private static Executor executor = Executors.newSingleThreadExecutor();
 	//-------------------------------------------------------------------
 	public static class Observer<TData>
 	{
@@ -57,12 +60,20 @@ public class Observable<TData>
 	//----------------------------------------------------------------------
 	protected void fireNext(TData data)
 	{
-		callbacks.forEach((pair) -> pair.next.callback(data));
+		executor.execute(()->
+		{
+			callbacks.forEach((pair) -> pair.next.callback(data));
+		});
+
 	}
 
 	//----------------------------------------------------------------------
 	protected void fireError(Exception exception)
 	{
-		callbacks.forEach((pair) -> pair.error.callback(exception));
+		executor.execute(()->
+		{
+			callbacks.forEach((pair) -> pair.error.callback(exception));
+		});
+
 	}
 }
